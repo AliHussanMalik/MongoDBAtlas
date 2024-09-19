@@ -1,4 +1,8 @@
+
+const { object } = require('joi');
 const Item = require('../models/Item');
+const bcrypt = require("bcrypt");
+const json = require("jsonwebtoken")
 
 // Get all items
 exports.getItems = async (req, res) => {
@@ -12,11 +16,23 @@ exports.getItems = async (req, res) => {
 
 // Create a new item
 exports.createItem = async (req, res) => {
-  const { name, quantity, price } = req.body;
-  const newItem = new Item({ name, quantity, price });
+
+  const { name, quantity, price,password } = req.body;
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  // const newItem = new Item({ name, quantity, price, hashedPassword });
+  
+
+  const newItem = new Item ({
+  name,
+  quantity,
+  price,
+  password: hashedPassword
+
+  })
 
   try {
-    const item = await newItem.save();
+    const item = await newItem.save();  
     res.status(201).json(item);
   } catch (err) {
     res.status(400).json({ message: err.message });

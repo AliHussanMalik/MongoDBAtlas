@@ -15,6 +15,12 @@ const ItemSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  password:{
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 1024,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
